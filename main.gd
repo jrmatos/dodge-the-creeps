@@ -13,32 +13,35 @@ func _process(delta):
 	pass
 
 func game_over():
-	$ScoreTimer.stop()
-	$MobTimer.stop()
-	$HUD.show_game_over()
+	get_node("ColorRect/ScoreTimer").stop()
+	get_node("ColorRect/MobTimer").stop()
+	get_node("ColorRect/HUD").show_game_over()
+	$Music.stop()
+	$DeathSound.play()
 
 func new_game():
 	score = 0
-	$Player.start($StartPosition.position)
-	$StartTimer.start()
-	$HUD.update_score(score)
-	$HUD.show_message("Get Ready")
+	get_node("ColorRect/Player").start(get_node("ColorRect/StartPosition").position)
+	get_node("ColorRect/StartTimer").start()
+	get_node("ColorRect/HUD").update_score(score)
+	get_node("ColorRect/HUD").show_message("Get Ready")
 	get_tree().call_group("mobs", "queue_free")
+	$Music.play()
 
 func _on_start_timer_timeout():
-	$MobTimer.start()
-	$ScoreTimer.start()
+	get_node("ColorRect/MobTimer").start()
+	get_node("ColorRect/ScoreTimer").start()
 
 func _on_score_timer_timeout():
 	score += 1
-	$HUD.update_score(score)
+	get_node("ColorRect/HUD").update_score(score)
 
 func _on_mob_timer_timeout():
 	# create a new instance of the mob scene
 	var mob = mob_scene.instantiate()
 	
 	# choose a random location on Path2D
-	var mob_spawn_location = get_node("MobPath/MobSpawnLocation")
+	var mob_spawn_location = get_node("ColorRect/MobPath/MobSpawnLocation")
 	mob_spawn_location.progress_ratio = randf()
 	
 	# set the mob's direction perpendicular to the path direction
